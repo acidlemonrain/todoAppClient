@@ -37,7 +37,7 @@
  
  <script>
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:9999";
+axios.defaults.baseURL = "http://localhost:7000";
 export default {
   data: () => {
     return {
@@ -45,7 +45,12 @@ export default {
     };
   },
   created() {
-    axios.get("/todolist").then(x => (this.todols = x.data));
+    axios
+      .get("/todolist")
+      .then(x => (this.todols = x.data))
+      .catch(() => {
+        this.$toast.error("服务器异常");
+      });
   }
 };
 </script>

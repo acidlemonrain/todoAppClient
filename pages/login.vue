@@ -64,7 +64,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:9999";
+axios.defaults.baseURL = "http://localhost:7000";
 export default {
   data: () => {
     return {
@@ -96,19 +96,24 @@ export default {
         name: this.name,
         password: this.password
       };
-      axios.post("/user", info).then(res => {
-        if (res.data !== null && res.data !== false) {
-          this.$store.commit("settoken", res.data);
-          this.$router.push("user");
-          this.$toast("登录成功");
-        }
-        if (res.data === null) {
-          this.$toast.error("用户不存在");
-        }
-        if (res.data === false) {
-          this.$toast.error("用户名或密码不正确");
-        }
-      });
+      axios
+        .post("/user", info)
+        .then(res => {
+          if (res.data !== null && res.data !== false) {
+            this.$store.commit("settoken", res.data);
+            this.$router.push("user");
+            this.$toast("登录成功");
+          }
+          if (res.data === null) {
+            this.$toast.error("用户不存在");
+          }
+          if (res.data === false) {
+            this.$toast.error("用户名或密码不正确");
+          }
+        })
+        .catch(() => {
+          this.$toast.error("服务器异常");
+        });
     }
   }
 };

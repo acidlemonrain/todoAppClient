@@ -64,6 +64,10 @@
           <v-card-actions>
             <i>deadline: {{ele.deadline | local}}</i>
           </v-card-actions>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn @click="rmtodo(ele.id)">删除</v-btn>
+          </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
@@ -72,7 +76,7 @@
 
 <script>
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:9999";
+axios.defaults.baseURL = "http://localhost:7000";
 export default {
   data: () => {
     return {
@@ -94,6 +98,14 @@ export default {
   },
 
   methods: {
+    rmtodo(x) {
+      axios.get("/todo/rm/" + x).then(res => {
+        if (res.data == true) {
+          this.$toast("删除成功");
+          this.init();
+        }
+      });
+    },
     privacy() {
       const value = this.color == "green" ? false : true;
       const finalcolor = value == false ? "grey" : "green";
@@ -119,7 +131,6 @@ export default {
     this.id = this.$route.params.id;
     axios.get("/todo/" + this.id).then(res => {
       this.todos = res.data;
-      console.log(res.data);
     });
   },
   add() {
